@@ -120,6 +120,14 @@ class Node:
         for peer in self.all_peers:
             if f"node-{peer_id.lower()}" in peer:
                 return peer
+        
+        # Fallback for localhost execution based on ports
+        port_mapping = {"A": "8001", "B": "8002", "C": "8003", "D": "8004", "E": "8005"}
+        expected_port = port_mapping.get(peer_id.upper())
+        if expected_port:
+            for peer in self.all_peers:
+                if expected_port in peer:
+                    return peer
         return ""
 
     def get_peer_id_from_url(self, url: str) -> str:
@@ -127,6 +135,14 @@ class Node:
         for p in ['a', 'b', 'c', 'd', 'e']:
             if f"node-{p}" in url:
                 return p.upper()
+        
+        # Fallback for localhost execution based on ports
+        if "8001" in url: return "A"
+        if "8002" in url: return "B"
+        if "8003" in url: return "C"
+        if "8004" in url: return "D"
+        if "8005" in url: return "E"
+        
         return "UNKNOWN"
 
     async def request_cs(self):
